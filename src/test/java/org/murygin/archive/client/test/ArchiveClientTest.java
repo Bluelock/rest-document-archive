@@ -1,8 +1,20 @@
 package org.murygin.archive.client.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.murygin.archive.Application;
+import org.murygin.archive.client.ArchiveServiceClient;
+import org.murygin.archive.service.Document;
+import org.murygin.archive.service.IArchiveService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -11,26 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.murygin.archive.Application;
-import org.murygin.archive.client.ArchiveServiceClient;
-import org.murygin.archive.dao.FileSystemDocumentDao;
-import org.murygin.archive.service.Document;
-import org.murygin.archive.service.DocumentMetadata;
-import org.murygin.archive.service.IArchiveService;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -42,28 +35,19 @@ public class ArchiveClientTest {
     
     private static final String TEST_FILE_DIR = "test-images";
 
-    ApplicationContext applicationContext;
+    @Value("${file.base.dir:/var/local/bluelock}")
+    private String baseDir;
+
     IArchiveService client;
 
     @Before
     public void setUp() throws IOException {
         client = new ArchiveServiceClient();
-        testUpload();
     }
 
     @After
     public void tearDown() {
-        deleteDirectory(new File(FileSystemDocumentDao.DIRECTORY));
-    }
-
-    @Test
-    public void testFindDocuments() {
-        List<DocumentMetadata> result = client.findDocuments(getPersonName(), null);
-        assertNotNull("Result is null", result);
-        assertTrue("Result is empty", !result.isEmpty());
-        for (DocumentMetadata documentMetadata : result) {
-            assertEquals("Person name is not : " + getPersonName(), getPersonName(), documentMetadata.getPersonName());
-        }
+        deleteDirectory(new File(baseDir));
     }
 
     @Test
@@ -72,24 +56,25 @@ public class ArchiveClientTest {
         for (String fileName : fileList) {
             uploadFile(fileName);
         }
-        testFindDocuments();
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     private void uploadFile(String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(TEST_FILE_DIR).append(File.separator).append(fileName);
         Path path = Paths.get(sb.toString());
         byte[] fileData = Files.readAllBytes(path);
-        Date today = Calendar.getInstance().getTime();
-        String personName = getPersonName();        
-        DocumentMetadata metadata = client.save(new Document(fileData, fileName, today, personName));
+        String clientId = getClientId();
+        Document saved = client.save(new Document(fileData, clientId, fileName));
+        byte[] retrieved = client.getDocumentFile(saved.getFileName(), saved.getClientId());
+        Assert.isTrue(Arrays.equals(saved.getFileData(), retrieved));
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Document saved, uuid: " + metadata.getUuid());
+            LOG.debug("Document saved, file: " + saved.getFileName());
         }
     }
 
-    private String getPersonName() {
-        return this.getClass().getSimpleName();
+    private String getClientId() {
+        return Integer.toString(this.getClass().getSimpleName().length());
     }
 
     private List<String> getFileList() {
@@ -106,11 +91,11 @@ public class ArchiveClientTest {
     public static boolean deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].isDirectory()) {
-                    deleteDirectory(files[i]);
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteDirectory(file);
                 } else {
-                    files[i].delete();
+                    file.delete();
                 }
             }
         }

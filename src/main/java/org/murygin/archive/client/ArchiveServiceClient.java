@@ -1,23 +1,19 @@
 package org.murygin.archive.client;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.murygin.archive.service.Document;
-import org.murygin.archive.service.DocumentMetadata;
 import org.murygin.archive.service.IArchiveService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -26,16 +22,19 @@ import org.springframework.web.client.RestTemplate;
 public class ArchiveServiceClient implements IArchiveService {
 
     private static final Logger LOG = Logger.getLogger(ArchiveServiceClient.class);
-    
+
     String protocol = "http";
-    String hostname = "localhost";
-    Integer port = 8080;
-    String baseUrl = "archive";
+    @Value("${hostname:localhost}")
+    String hostname;
+    @Value("${port:8080}")
+    Integer port;
+    @Value("${url:bluelock}")
+    String baseUrl;
     
     RestTemplate restTemplate;
     
     @Override
-    public DocumentMetadata save(Document document) {
+    public Document save(Document document) {
         try {          
             return doSave(document);
         } catch (RuntimeException e) {
@@ -48,42 +47,28 @@ public class ArchiveServiceClient implements IArchiveService {
 
     }
 
-    private DocumentMetadata doSave(Document document) throws IOException, FileNotFoundException {
+    private Document doSave(Document document) throws IOException {
         String tempFilePath = writeDocumentToTempFile(document);
         MultiValueMap<String, Object> parts = createMultipartFileParam(tempFilePath);
-        String dateString = DocumentMetadata.DATE_FORMAT.format(document.getDocumentDate());
-        DocumentMetadata documentMetadata = getRestTemplate().postForObject(getServiceUrl() + "/upload?person={name}&date={date}", 
-                parts, 
-                DocumentMetadata.class,
-                document.getPersonName(), 
-                dateString);
-        return documentMetadata;
+        return getRestTemplate().postForObject(getServiceUrl() + "/upload/" + document.getClientId(),
+                parts,
+                Document.class);
     }
 
     @Override
-    public byte[] getDocumentFile(String id) {
-        return getRestTemplate().getForObject(getServiceUrl() +  "/document/{id}", byte[].class, id);
+    public byte[] getDocumentFile(String fileName, String clientId) {
+        return getRestTemplate().getForObject(getServiceUrl() +  "/document/{clientId}/{fileName}", byte[].class, clientId, fileName);
     }
 
-    @Override
-    public List<DocumentMetadata> findDocuments(String personName, Date date) {
-        String dateString = null;
-        if(date!=null) {           
-            dateString = DocumentMetadata.DATE_FORMAT.format(date);
-        }
-        DocumentMetadata[] result = getRestTemplate().getForObject(getServiceUrl() +  "documents?person={name}&date={date}", DocumentMetadata[].class, personName, dateString);
-        return Arrays.asList(result);
-    }
-    
     private MultiValueMap<String, Object> createMultipartFileParam(String tempFilePath) {
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();           
-        parts.add("file", new FileSystemResource(tempFilePath));
+        parts.add(Document.PROP_FILE_DATA, new FileSystemResource(tempFilePath));
         return parts;
     }
 
-    private String writeDocumentToTempFile(Document document) throws IOException, FileNotFoundException {
+    private String writeDocumentToTempFile(Document document) throws IOException {
         Path path;       
-        path = Files.createTempDirectory(document.getUuid());  
+        path = Files.createTempDirectory(document.getFileName());
         String tempDirPath = path.toString();
         File file = new File(tempDirPath,document.getFileName());
         FileOutputStream fo = new FileOutputStream(file);
@@ -107,6 +92,7 @@ public class ArchiveServiceClient implements IArchiveService {
         return protocol;
     }
 
+    @SuppressWarnings("unused")
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
@@ -115,6 +101,7 @@ public class ArchiveServiceClient implements IArchiveService {
         return hostname;
     }
 
+    @SuppressWarnings("unused")
     public void setHostname(String hostname) {
         this.hostname = hostname;
     }
@@ -123,6 +110,7 @@ public class ArchiveServiceClient implements IArchiveService {
         return port;
     }
 
+    @SuppressWarnings("unused")
     public void setPort(Integer port) {
         this.port = port;
     }
@@ -131,6 +119,7 @@ public class ArchiveServiceClient implements IArchiveService {
         return baseUrl;
     }
 
+    @SuppressWarnings("unused")
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
     }
@@ -142,6 +131,7 @@ public class ArchiveServiceClient implements IArchiveService {
         return restTemplate;
     }
 
+    @SuppressWarnings("unused")
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }

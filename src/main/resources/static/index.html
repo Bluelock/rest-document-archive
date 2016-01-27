@@ -1,63 +1,39 @@
-<html ng-app="archive">
+<html ng-app="bluelock">
 <head>
 <meta charset="utf8" />
-<title>Document Archive</title>
+<title>Bluelock File Store</title>
 <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
 	<div id="wrap">
 		<div id="header">
-			<h1>Document Archive</h1>
+			<h1>Bluelock File Store</h1>
 		</div>
-		<div id="main" ng-controller="ArchiveCtrl">
-			<h2>Documents</h2>
+		<div id="main" ng-controller="RetrieveCtrl">
+			<h2>File Store</h2>
 			<table class="table">
-			<tr>
-				<td>Name</td>
-				<td>Date</td>
-			</tr>
-			<tr>
-				<td><input type="text" ng-model="name"
-					ng-change="search(name,date);" /></td>
-				<td><input type="text" ng-model="date"
-					ng-change="search(name,date);" /></td>
-			</tr>
-		</table>
-		<table id="table-6">
-			<thead>
-    			<tr>
-    				<th>File</th>
-    				<th>Person</th>
-    				<th>Date</th>
-    			</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="metadata in metadataList">
-					<td><a href="/archive/document/{{metadata.uuid}}">{{metadata.fileName}}</a></td>
-					<td><a href="/archive/document/{{metadata.uuid}}">{{metadata.personName}}</a></td>
-					<td><a href="/archive/document/{{metadata.uuid}}">{{metadata.documentDate | date:'yyyy-MM-dd'}}</a></td>
+				<tr>
+					<td>Client Id</td>
+					<td>File Name</td>
 				</tr>
-			</tbody>		
-		</table>
+				<tr>
+					<td><input class="clientId" type="text" ng-model="clientId"/></td>
+					<td><input type="text" ng-model="fileName"/></td>
+					<td><button ng-click="search(clientId, fileName)">Download</button></td>
+				</tr>
+			</table>
 		</div>
 		<div id="sidebar" ng-controller="UploadCtrl">
 			<h2>Upload</h2>
 			<table class="table">
 				<tr>
-					<td>Name</td>
+					<td>Client Id</td>
 				</tr>
 				<tr>
-					<td><input type="text" ng-model="name"></td>
-				</tr>
-				<tr>
-					<td>Date</td>
-				</tr>
-				<tr>
-					<td><input type="text" ng-model="date"></td>
+					<td><input class="clientId" type="text" ng-model="clientId"></td>
 				</tr>
 				<tr>
 					<td><input type="file" class="custom-file-input" file-model="myFile"></td>
-					
 				</tr>
 				<tr>
 					<td><button ng-click="uploadFile()">Upload</button></td>

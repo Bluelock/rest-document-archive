@@ -26,27 +26,17 @@ public class ArchiveService implements IArchiveService, Serializable {
      * @see org.murygin.archive.service.IArchiveService#save(org.murygin.archive.service.Document)
      */
     @Override
-    public DocumentMetadata save(Document document) {
+    public Document save(Document document) {
         getDocumentDao().insert(document); 
-        return document.getMetadata();
+        return document;
     }
-    
-    /**
-     * Finds document in the archive
-     * @see org.murygin.archive.service.IArchiveService#findDocuments(java.lang.String, java.util.Date)
-     */
-    @Override
-    public List<DocumentMetadata> findDocuments(String personName, Date date) {
-        return getDocumentDao().findByPersonNameDate(personName, date);
-    }
-    
+
     /**
      * Returns the document file from the archive
-     * @see org.murygin.archive.service.IArchiveService#getDocumentFile(java.lang.String)
      */
     @Override
-    public byte[] getDocumentFile(String id) {
-        Document document = getDocumentDao().load(id);
+    public byte[] getDocumentFile(String fileName, String clientId) {
+        Document document = getDocumentDao().load(fileName, clientId);
         if(document!=null) {
             return document.getFileData();
         } else {

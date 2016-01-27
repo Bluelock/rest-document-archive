@@ -1,7 +1,6 @@
 package org.murygin.archive.service;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -9,34 +8,47 @@ import java.util.Properties;
  * 
  * @author Daniel Murygin <daniel.murygin[at]gmail[dot]com>
  */
-public class Document extends DocumentMetadata implements Serializable {
+public class Document implements Serializable {
 
-    private static final long serialVersionUID = 2004955454853853315L;
-    
+    private static final long serialVersionUID = 1L;
+    public static final String PROP_FILE_DATA = "file";
+
+    private String clientId;
+    protected String fileName;
     private byte[] fileData;
-    
-    public Document( byte[] fileData, String fileName, Date documentDate, String personName) {
-        super(fileName, documentDate, personName);
-        this.fileData = fileData;
+
+    public Document() {
     }
 
-    public Document(Properties properties) {
-        super(properties);
+    public Document(byte[] fileData, String clientId, String fileName) {
+        this.fileData = fileData;
+        this.clientId = clientId;
+        this.fileName = fileName;
     }
-    
-    public Document(DocumentMetadata metadata) {
-        super(metadata.getUuid(), metadata.getFileName(), metadata.getDocumentDate(), metadata.getPersonName());
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    @SuppressWarnings("unused")
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    @SuppressWarnings("unused")
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public byte[] getFileData() {
         return fileData;
     }
+
     public void setFileData(byte[] fileData) {
         this.fileData = fileData;
     }
-    
-    public DocumentMetadata getMetadata() {
-        return new DocumentMetadata(getUuid(), getFileName(), getDocumentDate(), getPersonName());
-    }
-    
 }
