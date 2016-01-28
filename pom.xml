@@ -62,4 +62,16 @@
             <url>http://repo.spring.io/libs-release</url>
         </pluginRepository>
     </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>repo.bluelocklabs.com</id>
+            <name>BlueLock Releases Maven Repository</name>
+            <url>http://repo.bluelocklabs.com/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>repo.bluelocklabs.com</id>
+            <name>BlueLock Snapshots Maven Repository</name>
+            <url>http://repo.bluelocklabs.com/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
