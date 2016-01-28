@@ -4,6 +4,7 @@ import com.bluelock.filesystem.Application;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.bluelock.filesystem.client.ArchiveServiceClient;
@@ -51,6 +52,7 @@ public class ArchiveClientTest {
         deleteDirectory(new File(baseDir));
     }
 
+    @Ignore
     @Test
     public void testUpload() throws IOException {
         List<String> fileList = getFileList();
