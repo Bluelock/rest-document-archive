@@ -1,9 +1,6 @@
-package org.murygin.archive.dao;
+package com.bluelock.filesystem.dao;
 
-import java.util.Date;
-import java.util.List;
-
-import org.murygin.archive.service.Document;
+import com.bluelock.filesystem.service.Document;
 
 /**
  * Data access object to insert, find and load {@link Document}s

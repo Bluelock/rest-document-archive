@@ -1,14 +1,14 @@
-package org.murygin.archive.client.test;
+package com.bluelock.filesystem.client.test;
 
+import com.bluelock.filesystem.Application;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.murygin.archive.Application;
-import org.murygin.archive.client.ArchiveServiceClient;
-import org.murygin.archive.service.Document;
-import org.murygin.archive.service.IArchiveService;
+import com.bluelock.filesystem.client.ArchiveServiceClient;
+import com.bluelock.filesystem.service.Document;
+import com.bluelock.filesystem.service.IArchiveService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -42,6 +42,7 @@ public class ArchiveClientTest {
 
     @Before
     public void setUp() throws IOException {
+        baseDir += "/" + getClientId();
         client = new ArchiveServiceClient();
     }
 

@@ -1,9 +1,8 @@
-package org.murygin.archive.client;
+package com.bluelock.filesystem.client;
 
+import com.bluelock.filesystem.service.Document;
+import com.bluelock.filesystem.service.IArchiveService;
 import org.apache.log4j.Logger;
-import org.murygin.archive.service.Document;
-import org.murygin.archive.service.IArchiveService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -24,19 +23,18 @@ public class ArchiveServiceClient implements IArchiveService {
     private static final Logger LOG = Logger.getLogger(ArchiveServiceClient.class);
 
     String protocol = "http";
-    @Value("${hostname:localhost}")
-    String hostname;
-    @Value("${port:8080}")
-    Integer port;
-    @Value("${url:bluelock}")
-    String baseUrl;
+    String hostname = "localhost";
+    Integer port = 8082;
+    String baseUrl = "bluelock" ;
     
     RestTemplate restTemplate;
     
     @Override
     public Document save(Document document) {
         try {          
-            return doSave(document);
+            String fileName = doSave(document);
+            document.setFileName(fileName);
+            return document;
         } catch (RuntimeException e) {
             LOG.error("Error while uploading file", e);
             throw e;
@@ -47,12 +45,12 @@ public class ArchiveServiceClient implements IArchiveService {
 
     }
 
-    private Document doSave(Document document) throws IOException {
+    private String doSave(Document document) throws IOException {
         String tempFilePath = writeDocumentToTempFile(document);
         MultiValueMap<String, Object> parts = createMultipartFileParam(tempFilePath);
         return getRestTemplate().postForObject(getServiceUrl() + "/upload/" + document.getClientId(),
                 parts,
-                Document.class);
+                String.class);
     }
 
     @Override

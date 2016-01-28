@@ -1,10 +1,8 @@
-package org.murygin.archive.service;
+package com.bluelock.filesystem.service;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
-import org.murygin.archive.dao.IDocumentDao;
+import com.bluelock.filesystem.dao.IDocumentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,7 @@ public class ArchiveService implements IArchiveService, Serializable {
 
     /**
      * Saves a document in the archive.
-     * @see org.murygin.archive.service.IArchiveService#save(org.murygin.archive.service.Document)
+     * @see IArchiveService#save(Document)
      */
     @Override
     public Document save(Document document) {

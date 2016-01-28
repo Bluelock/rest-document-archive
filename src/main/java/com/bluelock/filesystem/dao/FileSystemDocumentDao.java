@@ -1,7 +1,7 @@
-package org.murygin.archive.dao;
+package com.bluelock.filesystem.dao;
 
 import org.apache.log4j.Logger;
-import org.murygin.archive.service.Document;
+import com.bluelock.filesystem.service.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +19,7 @@ import java.nio.file.Paths;
  * 
  * FileSystemDocumentDao saves documents in the file system. No database in involved.
  * For each document a folder is created. The folder contains the document
- * and a properties files with the meta data of the document.
  * Each document in the archive has a Universally Unique Identifier (UUID).
- * The name of the documents folder is the UUID of the document.
  * 
  * @author Daniel Murygin <daniel.murygin[at]gmail[dot]com>
  */
@@ -45,13 +43,19 @@ public class FileSystemDocumentDao implements IDocumentDao {
      * of the document. In the folder the document is saved and a properties file
      * with the meta data of the document. 
      * 
-     * @see org.murygin.archive.dao.IDocumentDao#insert(org.murygin.archive.service.Document)
+     * @see IDocumentDao#insert(Document)
      */
     @Override
     public void insert(Document document) {
         try {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("STARTED -> uploading file. [filename: " + document.getFileName() + " | clientId: " + document.getClientId() + "]");
+            }
             createDirectory(document);
             saveFileData(document);
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("FINISHED -> uploading file. [filename: " + document.getFileName() + " | clientId: " + document.getClientId() + "]");
+            }
         } catch (IOException e) {
             String message = "Error while inserting document";
             LOG.error(message, e);
@@ -66,11 +70,16 @@ public class FileSystemDocumentDao implements IDocumentDao {
     @Override
     public Document load(String fileName, String clientId) {
         try {
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("STARTED -> downloading file. [filename: " + fileName + " | clientId: " + clientId + "]");
+            }
             return loadFromFileSystem(fileName, clientId);
         } catch (IOException e) {
             String message = "Error while loading document with id: " + fileName;
             LOG.error(message, e);
             throw new RuntimeException(message, e);
+        } finally {
+            LOG.debug("FINISHED -> downloading file. [filename: " + fileName + " | clientId: " + clientId + "]");
         }
         
     }
@@ -103,6 +112,9 @@ public class FileSystemDocumentDao implements IDocumentDao {
         String baseFilePath = baseDir + File.separator + clientId;
         for (int i = 0; i < getNumberOfNestedDirectories(); i++) {
             baseFilePath += File.separator + fileName.toCharArray()[i];
+        }
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Base File Path " + baseFilePath + " for file " + fileName);
         }
         return baseFilePath;
     }

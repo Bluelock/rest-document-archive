@@ -1,13 +1,15 @@
-package org.murygin.archive.rest;
+package com.bluelock.filesystem.rest;
 
 import org.apache.log4j.Logger;
-import org.murygin.archive.service.Document;
-import org.murygin.archive.service.IArchiveService;
+import com.bluelock.filesystem.service.Document;
+import com.bluelock.filesystem.service.IArchiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 /**
  * REST web service for archive service {@link IArchiveService}.
@@ -34,13 +36,14 @@ public class ArchiveController {
      * @return The meta data of the added document
      */
     @RequestMapping(value = "/upload/{clientId}", method = RequestMethod.POST)
-    public @ResponseBody Document handleFileUpload(
+    public @ResponseBody String handleFileUpload(
             @PathVariable String clientId,
             @RequestParam(value="file", required=true) MultipartFile file) {
         
         try {
-            Document document = new Document(file.getBytes(), clientId, file.getOriginalFilename());
-            return getArchiveService().save(document);
+            String fileName = UUID.randomUUID().toString();
+            Document document = new Document(file.getBytes(), clientId, fileName);
+            return getArchiveService().save(document).getFileName();
         } catch (RuntimeException e) {
             LOG.error("Error while uploading.", e);
             throw e;
@@ -59,11 +62,18 @@ public class ArchiveController {
      */
     @RequestMapping(value = "/document/{clientId}/{fileName:.+}", method = RequestMethod.GET)
     public HttpEntity<byte[]> getDocument(@PathVariable String clientId, @PathVariable String fileName) {
-        // send it back to the client
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.IMAGE_JPEG);
-        return new ResponseEntity<byte[]>(getArchiveService().getDocumentFile(fileName, clientId), httpHeaders, HttpStatus.OK);
-    }
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<byte[]>(getArchiveService().getDocumentFile(fileName, clientId), httpHeaders, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            LOG.error("Error while downloading.", e);
+            throw e;
+        } catch (Exception e) {
+            LOG.error("Error while downloading.", e);
+            throw new RuntimeException(e);
+        }
+}
 
     public IArchiveService getArchiveService() {
         return archiveService;

@@ -1,5 +1,8 @@
-var urlPath = 'bluelock';
-var app = angular.module(urlPath, []);
+var urlLocation = 'bluelock';
+var app = angular.module(urlLocation, []);
+var baseUrl = 'web-chart-01.z01.devmgmt.blk';
+var port = '8082';
+var url = "http://" + baseUrl + ":" + port + "/" + urlLocation;
 
 app.directive('fileModel', [ '$parse', function($parse) {
 	return {
@@ -30,8 +33,8 @@ app.service('fileUpload', ['$http','ArchiveService', function($http, ArchiveServ
 			headers : {
 				'Content-Type' : undefined
 			}
-		}).success(function() {
-			alert("File Uploaded!");
+		}).success(function(data) {
+			alert("File Uploaded! " + data);
 		}).error(function() {
 			alert("Unable to upload file!");
 		});
@@ -44,14 +47,14 @@ app.controller('UploadCtrl', [ '$scope', 'fileUpload',
 				var clientId = $scope.clientId;
 				var file = $scope.myFile;
 				console.log('file is ' + JSON.stringify(file));
-				var uploadUrl = "/" + urlPath +"/upload/"+clientId;
+				var uploadUrl = url +"/upload/"+clientId;
 				fileUpload.uploadFileToUrl(uploadUrl, file);
 			};
 		} ]);
 
 app.controller('RetrieveCtrl', function($scope, $http) {
 	$scope.search = function(clientId, fileName) {
-		$http.get("http://localhost:8080/" + urlPath + "/document/"+clientId + "/"+fileName).success(function(response) {
+		$http.get(url + "/document/"+clientId + "/"+fileName).success(function(response) {
 			alert("FILE BYTE ARRAY:   " +JSON.stringify(response));
 		}).error(function() {
 			alert("Unable to download file!");

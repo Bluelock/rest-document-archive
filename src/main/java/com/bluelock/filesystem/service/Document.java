@@ -1,7 +1,6 @@
-package org.murygin.archive.service;
+package com.bluelock.filesystem.service;
 
 import java.io.Serializable;
-import java.util.Properties;
 
 /**
  * A document from an archive managed by {@link IArchiveService}.
@@ -16,9 +15,6 @@ public class Document implements Serializable {
     private String clientId;
     protected String fileName;
     private byte[] fileData;
-
-    public Document() {
-    }
 
     public Document(byte[] fileData, String clientId, String fileName) {
         this.fileData = fileData;
