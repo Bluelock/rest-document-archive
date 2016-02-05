@@ -4,9 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bluelock</groupId>
-    <artifactId>rest-document-archive</artifactId>
+    <artifactId>file-loader</artifactId>
     <name>file-loader</name>
-    <version>0.1.0</version>
+    <description>API Gateway for RESTful access to Portfolio</description>
+    <packaging>jar</packaging>
+    <version>2016.01-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
