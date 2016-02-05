@@ -5,6 +5,7 @@
 
     <groupId>com.bluelock</groupId>
     <artifactId>rest-document-archive</artifactId>
+    <name>file-loader</name>
     <version>0.1.0</version>
 
     <parent>
