@@ -6,7 +6,6 @@
     <groupId>com.bluelock</groupId>
     <artifactId>file-loader</artifactId>
     <name>file-loader</name>
-    <description>API Gateway for RESTful access to Portfolio</description>
     <packaging>jar</packaging>
     <version>2016.01-SNAPSHOT</version>
 
@@ -29,6 +28,41 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.5</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>jar-with-dependencies</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -53,18 +87,12 @@
 
     <repositories>
         <repository>
-            <id>spring-releases</id>
-            <name>Spring Releases</name>
-            <url>http://repo.spring.io/libs-release</url>
+            <id>repo.bluelocklabs.com</id>
+            <name>BlueLock Maven Repository</name>
+            <url>http://repo.bluelocklabs.com/content/groups/public</url>
+            <layout>default</layout>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-releases</id>
-            <name>Spring Releases</name>
-            <url>http://repo.spring.io/libs-release</url>
-        </pluginRepository>
-    </pluginRepositories>
     <distributionManagement>
         <repository>
             <id>repo.bluelocklabs.com</id>
