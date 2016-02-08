@@ -1,4 +1,4 @@
-package com.bluelock.filesystem.service;
+package com.bluelock.fileloader.service;
 
 import java.io.Serializable;
 

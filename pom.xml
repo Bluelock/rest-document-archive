@@ -7,7 +7,7 @@
     <artifactId>file-loader</artifactId>
     <name>file-loader</name>
     <packaging>jar</packaging>
-    <version>2016.01-SNAPSHOT</version>
+    <version>1-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -16,7 +16,7 @@
     </parent>
 
     <properties>
-        <start-class>com.bluelock.filesystem.Application</start-class>
+        <start-class>com.bluelock.fileloader.Application</start-class>
      </properties>
 
     <build>

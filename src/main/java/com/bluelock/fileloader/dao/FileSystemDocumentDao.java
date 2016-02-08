@@ -1,7 +1,7 @@
-package com.bluelock.filesystem.dao;
+package com.bluelock.fileloader.dao;
 
 import org.apache.log4j.Logger;
-import com.bluelock.filesystem.service.Document;
+import com.bluelock.fileloader.service.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

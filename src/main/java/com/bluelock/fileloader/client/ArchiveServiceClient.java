@@ -1,7 +1,7 @@
-package com.bluelock.filesystem.client;
+package com.bluelock.fileloader.client;
 
-import com.bluelock.filesystem.service.Document;
-import com.bluelock.filesystem.service.IArchiveService;
+import com.bluelock.fileloader.service.Document;
+import com.bluelock.fileloader.service.IArchiveService;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.LinkedMultiValueMap;

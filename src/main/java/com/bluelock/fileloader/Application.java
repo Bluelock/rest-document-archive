@@ -1,4 +1,4 @@
-package com.bluelock.filesystem;
+package com.bluelock.fileloader;
 
 import javax.servlet.MultipartConfigElement;
 

@@ -1,8 +1,8 @@
-package com.bluelock.filesystem.service;
+package com.bluelock.fileloader.service;
 
 import java.io.Serializable;
 
-import com.bluelock.filesystem.dao.IDocumentDao;
+import com.bluelock.fileloader.dao.IDocumentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

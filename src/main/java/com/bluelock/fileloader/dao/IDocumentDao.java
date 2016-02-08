@@ -1,6 +1,6 @@
-package com.bluelock.filesystem.dao;
+package com.bluelock.fileloader.dao;
 
-import com.bluelock.filesystem.service.Document;
+import com.bluelock.fileloader.service.Document;
 
 /**
  * Data access object to insert, find and load {@link Document}s

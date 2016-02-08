@@ -1,8 +1,8 @@
-package com.bluelock.filesystem.rest;
+package com.bluelock.fileloader.rest;
 
 import org.apache.log4j.Logger;
-import com.bluelock.filesystem.service.Document;
-import com.bluelock.filesystem.service.IArchiveService;
+import com.bluelock.fileloader.service.Document;
+import com.bluelock.fileloader.service.IArchiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;

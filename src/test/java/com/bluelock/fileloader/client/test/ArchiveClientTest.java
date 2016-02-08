@@ -1,15 +1,15 @@
-package com.bluelock.filesystem.client.test;
+package com.bluelock.fileloader.client.test;
 
-import com.bluelock.filesystem.Application;
+import com.bluelock.fileloader.Application;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.bluelock.filesystem.client.ArchiveServiceClient;
-import com.bluelock.filesystem.service.Document;
-import com.bluelock.filesystem.service.IArchiveService;
+import com.bluelock.fileloader.client.ArchiveServiceClient;
+import com.bluelock.fileloader.service.Document;
+import com.bluelock.fileloader.service.IArchiveService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
