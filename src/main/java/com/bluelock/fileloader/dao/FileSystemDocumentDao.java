@@ -1,7 +1,8 @@
 package com.bluelock.fileloader.dao;
 
-import org.apache.log4j.Logger;
 import com.bluelock.fileloader.service.Document;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ import java.nio.file.Paths;
 @Service("documentDao")
 public class FileSystemDocumentDao implements IDocumentDao {
 
-    private static final Logger LOG = Logger.getLogger(FileSystemDocumentDao.class);
+    private static final Log LOG = LogFactory.getLog(FileSystemDocumentDao.class);
 
     @Value("${file.base.dir:/var/local/bluelock}")
     private String baseDir;
@@ -127,7 +128,10 @@ public class FileSystemDocumentDao implements IDocumentDao {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createDirectory(String path) {
         File file = new File(path);
-        file.mkdirs();
+        boolean madeDirectory = file.mkdirs();
+        if(!madeDirectory) {
+            LOG.error("Unable to make directory.");
+        }
     }
 
 }

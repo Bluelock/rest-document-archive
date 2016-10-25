@@ -1,6 +1,7 @@
 package com.bluelock.fileloader.rest;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import com.bluelock.fileloader.service.Document;
 import com.bluelock.fileloader.service.IArchiveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @RequestMapping(value = "/bluelock")
 public class ArchiveController {
 
-    private static final Logger LOG = Logger.getLogger(ArchiveController.class);
+    private static final Log LOG = LogFactory.getLog(ArchiveController.class);
     
     @Autowired
     IArchiveService archiveService;
@@ -44,13 +45,10 @@ public class ArchiveController {
             String fileName = UUID.randomUUID().toString();
             Document document = new Document(file.getBytes(), clientId, fileName);
             return getArchiveService().save(document).getFileName();
-        } catch (RuntimeException e) {
-            LOG.error("Error while uploading.", e);
-            throw e;
         } catch (Exception e) {
             LOG.error("Error while uploading.", e);
             throw new RuntimeException(e);
-        }      
+        }
     }
     
     /**

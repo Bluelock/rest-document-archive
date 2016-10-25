@@ -2,7 +2,8 @@ package com.bluelock.fileloader.client;
 
 import com.bluelock.fileloader.service.Document;
 import com.bluelock.fileloader.service.IArchiveService;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,7 +21,7 @@ import java.nio.file.Path;
  */
 public class ArchiveServiceClient implements IArchiveService {
 
-    private static final Logger LOG = Logger.getLogger(ArchiveServiceClient.class);
+    private static final Log LOG = LogFactory.getLog(ArchiveServiceClient.class);
 
     String protocol = "http";
     String hostname = "localhost";
